@@ -16,23 +16,21 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     public void createUsersTable() {
-
         try (Connection conn = Util.connect();
              Statement statement = conn.createStatement()) {
-            String SQL = "create table users( " +
+             String SQL = "create table users( " +
                     "id serial primary key," +
                     "name varchar(50) not null," +
                     "last_name varchar(50) not null," +
                     "age int not null )";
-            System.out.println("Table is created");
-            statement.executeUpdate(SQL);
+             System.out.println("Table is created");
+              statement.executeUpdate(SQL);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     public void dropUsersTable() {
-
         try (Connection conn = connect();
              Statement statement = conn.createStatement();) {
             String SQl = "drop table users";
@@ -58,11 +56,10 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        String SQL = "delete  from users where  id = ?";
+        String SQL = "delete  from users where  id = %s";
         try (Connection conn = connect();
-             PreparedStatement statement = conn.prepareStatement(SQL)){
-            statement.setInt(1, (int) id);
-            statement.executeUpdate();
+             Statement statement = conn.createStatement()){
+            statement.executeQuery(String.format(SQL, id));
             System.out.println("User with id:" + id + "  deleted");
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -70,7 +67,6 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-
         List<User> result = new ArrayList<>();
         String SQl = "select * from users";
         try (Connection conn = connect();
@@ -91,7 +87,6 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-
         try (Connection conn = connect();
              Statement statement = conn.createStatement()) {
             String SQL = "truncate table users";
